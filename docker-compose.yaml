@@ -15,19 +15,19 @@ services:
     env_file:
       - .env
     expose:
-      - 8080 # Expor para o Caddy acessar internamente
+      - 8080
 
   redis:
     image: redis:latest
-    container_name: redis
     networks:
       - evolution-net
+    container_name: redis
     command: >
       redis-server --port 6379 --appendonly yes
     volumes:
       - evolution_redis:/data
     expose:
-      - 6379 # Expor a porta correta internamente para outros serviços
+      - 6379
 
   postgres:
     container_name: postgres
@@ -41,28 +41,25 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     expose:
-      - 5432 # Expor internamente para outros serviços
+      - 5432
 
   caddy:
-    image: caddy:latest
     container_name: caddy
+    image: caddy:latest
     restart: always
-    ports:
-      - "80:80"       # Porta HTTP
-      - "443:443"     # Porta HTTPS
-    volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile
-      - caddy_data:/data
-      - caddy_config:/config
     networks:
       - evolution-net
+    ports:
+      - 8080:8080
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+    environment:
+      - CADDY_PATH=/etc/caddy/Caddyfile
 
 volumes:
   evolution_instances:
   evolution_redis:
   postgres_data:
-  caddy_data:
-  caddy_config:
 
 networks:
   evolution-net:
