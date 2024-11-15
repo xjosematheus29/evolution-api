@@ -16,8 +16,6 @@ services:
       - .env
     expose:
       - 8181
-    entrypoint: >
-      sh -c "if [ ! -f .env ]; then echo -e 'SERVER_TYPE=http\nSERVER_PORT=8181\n# Server URL - Set your application url\nSERVER_URL=http://localhost:8181' > .env; fi && exec your_command"
 
   redis:
     image: redis:latest
@@ -51,6 +49,7 @@ volumes:
   evolution_instances:
   evolution_redis:
   postgres_data:
+
 
 networks:
   evolution-net:
